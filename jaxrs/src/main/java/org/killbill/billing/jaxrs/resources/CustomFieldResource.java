@@ -86,7 +86,7 @@ public class CustomFieldResource extends JaxRsResourceBase {
         final Pagination<CustomField> customFields = customFieldUserApi.getCustomFields(offset, limit, tenantContext);
         final URI nextPageUri = uriBuilder.nextPage(CustomFieldResource.class, "getCustomFields", customFields.getNextOffset(), limit, ImmutableMap.<String, String>of(QUERY_AUDIT, auditMode.getLevel().toString()));
 
-        return buildStreamingPaginationResponse(customFields,
+        return buildStreamingPaginationResponse("customFields", customFields,
                                                 new Function<CustomField, CustomFieldJson>() {
                                                     @Override
                                                     public CustomFieldJson apply(final CustomField customField) {
@@ -113,7 +113,7 @@ public class CustomFieldResource extends JaxRsResourceBase {
         final Pagination<CustomField> customFields = customFieldUserApi.searchCustomFields(searchKey, offset, limit, tenantContext);
         final URI nextPageUri = uriBuilder.nextPage(CustomFieldResource.class, "searchCustomFields", customFields.getNextOffset(), limit, ImmutableMap.<String, String>of("searchKey", searchKey,
                                                                                                                                                                           QUERY_AUDIT, auditMode.getLevel().toString()));
-        return buildStreamingPaginationResponse(customFields,
+        return buildStreamingPaginationResponse("customFields", customFields,
                                                 new Function<CustomField, CustomFieldJson>() {
                                                     @Override
                                                     public CustomFieldJson apply(final CustomField customField) {

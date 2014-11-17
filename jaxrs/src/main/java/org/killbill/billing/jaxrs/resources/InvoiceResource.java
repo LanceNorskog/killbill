@@ -210,7 +210,7 @@ public class InvoiceResource extends JaxRsResourceBase {
                                                                                                                                                            QUERY_AUDIT, auditMode.getLevel().toString()));
 
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
-        return buildStreamingPaginationResponse(invoices,
+        return buildStreamingPaginationResponse("invoices", invoices,
                                                 new Function<Invoice, InvoiceJson>() {
                                                     @Override
                                                     public InvoiceJson apply(final Invoice invoice) {
@@ -243,7 +243,7 @@ public class InvoiceResource extends JaxRsResourceBase {
                                                                                                                                                               QUERY_INVOICE_WITH_ITEMS, withItems.toString(),
                                                                                                                                                               QUERY_AUDIT, auditMode.getLevel().toString()));
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
-        return buildStreamingPaginationResponse(invoices,
+        return buildStreamingPaginationResponse("invoices", invoices,
                                                 new Function<Invoice, InvoiceJson>() {
                                                     @Override
                                                     public InvoiceJson apply(final Invoice invoice) {

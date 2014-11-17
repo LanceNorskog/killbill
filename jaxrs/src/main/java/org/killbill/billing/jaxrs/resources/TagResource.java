@@ -96,7 +96,7 @@ public class TagResource extends JaxRsResourceBase {
             tagDefinitionsCache.put(tagDefinition.getId(), tagDefinition);
         }
 
-        return buildStreamingPaginationResponse(tags,
+        return buildStreamingPaginationResponse("tags", tags,
                                                 new Function<Tag, TagJson>() {
                                                     @Override
                                                     public TagJson apply(final Tag tag) {
@@ -129,7 +129,7 @@ public class TagResource extends JaxRsResourceBase {
         for (final TagDefinition tagDefinition : tagUserApi.getTagDefinitions(tenantContext)) {
             tagDefinitionsCache.put(tagDefinition.getId(), tagDefinition);
         }
-        return buildStreamingPaginationResponse(tags,
+        return buildStreamingPaginationResponse("tags", tags,
                                                 new Function<Tag, TagJson>() {
                                                     @Override
                                                     public TagJson apply(final Tag tag) {

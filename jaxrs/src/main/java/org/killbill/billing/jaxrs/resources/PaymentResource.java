@@ -137,7 +137,7 @@ public class PaymentResource extends JaxRsResourceBase {
                                                                                                                                                            QUERY_AUDIT, auditMode.getLevel().toString()));
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
 
-        return buildStreamingPaginationResponse(payments,
+        return buildStreamingPaginationResponse("payments", payments,
                                                 new Function<Payment, PaymentJson>() {
                                                     @Override
                                                     public PaymentJson apply(final Payment payment) {
@@ -183,7 +183,7 @@ public class PaymentResource extends JaxRsResourceBase {
                                                                                                                                                               QUERY_AUDIT, auditMode.getLevel().toString()));
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
 
-        return buildStreamingPaginationResponse(payments,
+        return buildStreamingPaginationResponse("payments", payments,
                                                 new Function<Payment, PaymentJson>() {
                                                     @Override
                                                     public PaymentJson apply(final Payment payment) {

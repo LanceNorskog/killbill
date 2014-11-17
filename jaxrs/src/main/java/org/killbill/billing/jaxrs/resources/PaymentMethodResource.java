@@ -158,7 +158,7 @@ public class PaymentMethodResource extends JaxRsResourceBase {
 
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
         final Map<UUID, Account> accounts = new HashMap<UUID, Account>();
-        return buildStreamingPaginationResponse(paymentMethods,
+        return buildStreamingPaginationResponse("paymentMethods", paymentMethods,
                                                 new Function<PaymentMethod, PaymentMethodJson>() {
                                                     @Override
                                                     public PaymentMethodJson apply(final PaymentMethod paymentMethod) {
@@ -217,7 +217,7 @@ public class PaymentMethodResource extends JaxRsResourceBase {
 
         final AtomicReference<Map<UUID, AccountAuditLogs>> accountsAuditLogs = new AtomicReference<Map<UUID, AccountAuditLogs>>(new HashMap<UUID, AccountAuditLogs>());
         final Map<UUID, Account> accounts = new HashMap<UUID, Account>();
-        return buildStreamingPaginationResponse(paymentMethods,
+        return buildStreamingPaginationResponse("paymentMethods", paymentMethods,
                                                 new Function<PaymentMethod, PaymentMethodJson>() {
                                                     @Override
                                                     public PaymentMethodJson apply(final PaymentMethod paymentMethod) {

@@ -23,8 +23,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,6 +75,9 @@ import org.killbill.billing.jaxrs.json.PaymentJson;
 import org.killbill.billing.jaxrs.json.PaymentMethodJson;
 import org.killbill.billing.jaxrs.json.PaymentTransactionJson;
 import org.killbill.billing.jaxrs.json.TagJson;
+import org.killbill.billing.jaxrs.resources.linksets.AccountLinkset;
+import org.killbill.billing.jaxrs.resources.linksets.InvoiceEmbeddedLinkset;
+import org.killbill.billing.jaxrs.resources.linksets.InvoiceLinkset;
 import org.killbill.billing.jaxrs.util.Context;
 import org.killbill.billing.jaxrs.util.JaxrsUriBuilder;
 import org.killbill.billing.overdue.OverdueApiException;
@@ -98,6 +103,11 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 import org.killbill.billing.util.tag.ControlTagType;
 import org.killbill.clock.Clock;
+
+import us.norskog.simplehal.Items;
+import us.norskog.simplehal.Link;
+import us.norskog.simplehal._Embedded;
+import us.norskog.simplehal._Links;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Function;
@@ -172,6 +182,29 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List accounts", response = AccountJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    @_Links(links = { 
+       		@Link(rel = "self", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
+    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    	    		} ),
+    		@Link(rel = "first", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
+    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    				} ),
+    	    @Link(rel = "next", href = {"${this}?", 
+    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}", 
+    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "+",
+    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    	    		})
+    		})    
     public Response getAccounts(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                 @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                 @QueryParam(QUERY_ACCOUNT_WITH_BALANCE) @DefaultValue("false") final Boolean accountWithBalance,
@@ -183,7 +216,7 @@ public class AccountResource extends JaxRsResourceBase {
         final URI nextPageUri = uriBuilder.nextPage(AccountResource.class, "getAccounts", accounts.getNextOffset(), limit, ImmutableMap.<String, String>of(QUERY_ACCOUNT_WITH_BALANCE, accountWithBalance.toString(),
                                                                                                                                                            QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, accountWithBalanceAndCBA.toString(),
                                                                                                                                                            QUERY_AUDIT, auditMode.getLevel().toString()));
-        return buildStreamingPaginationResponse(accounts,
+        return buildStreamingPaginationResponse("accounts", accounts,
                                                 new Function<Account, AccountJson>() {
                                                     @Override
                                                     public AccountJson apply(final Account account) {
@@ -201,6 +234,29 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search accounts", response = AccountJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    @_Links(links = { 
+       		@Link(rel = "self", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
+    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    	    		} ),
+    		@Link(rel = "first", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
+    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    				} ),
+    	    @Link(rel = "next", href = {"${this}?", 
+    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}", 
+    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "+",
+    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
+       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
+    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
+    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
+    	    		})
+    		})    
     public Response searchAccounts(@PathParam("searchKey") final String searchKey,
                                    @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                    @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
@@ -214,7 +270,7 @@ public class AccountResource extends JaxRsResourceBase {
                                                                                                                                                               QUERY_ACCOUNT_WITH_BALANCE, accountWithBalance.toString(),
                                                                                                                                                               QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, accountWithBalanceAndCBA.toString(),
                                                                                                                                                               QUERY_AUDIT, auditMode.getLevel().toString()));
-        return buildStreamingPaginationResponse(accounts,
+        return buildStreamingPaginationResponse("accounts", accounts,
                                                 new Function<Account, AccountJson>() {
                                                     @Override
                                                     public AccountJson apply(final Account account) {
@@ -233,13 +289,14 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve bundles for account", response = BundleJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
     public Response getAccountBundles(@PathParam("accountId") final String accountId,
                                       @QueryParam(QUERY_EXTERNAL_KEY) final String externalKey,
                                       @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException, SubscriptionApiException {
         final TenantContext tenantContext = context.createContext(request);
 
         final UUID uuid = UUID.fromString(accountId);
-        accountUserApi.getAccountById(uuid, tenantContext);
+        Account account = accountUserApi.getAccountById(uuid, tenantContext);
 
         final List<SubscriptionBundle> bundles = (externalKey != null) ?
                                                  subscriptionApi.getSubscriptionBundlesForAccountIdAndExternalKey(uuid, externalKey, tenantContext) :
@@ -251,7 +308,12 @@ public class AccountResource extends JaxRsResourceBase {
                 return new BundleJson(input, null);
             }
         });
-        return Response.status(Status.OK).entity(result).build();
+        // TODO: HAL really should be full account object with bundle list, but feeling lazy
+        Map<String, Object> wrapper = new HashMap<String, Object>();
+        wrapper.put("bundles", result);
+        wrapper.put("accountId", account.getId());
+        wrapper.put("externalKey", account.getExternalKey());
+        return Response.status(Status.OK).entity(wrapper).build();
     }
 
     @Timed
@@ -259,6 +321,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve an account by external key", response = AccountJson.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
     public Response getAccountByKey(@QueryParam(QUERY_EXTERNAL_KEY) final String externalKey,
                                     @QueryParam(QUERY_ACCOUNT_WITH_BALANCE) @DefaultValue("false") final Boolean accountWithBalance,
                                     @QueryParam(QUERY_ACCOUNT_WITH_BALANCE_AND_CBA) @DefaultValue("false") final Boolean accountWithBalanceAndCBA,
@@ -291,6 +354,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Create account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account data supplied")})
+    @_Links(linkset = AccountLinkset.class)
     public Response createAccount(final AccountJson json,
                                   @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                   @HeaderParam(HDR_REASON) final String reason,
@@ -311,6 +375,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Path("/{accountId:" + UUID_PATTERN + "}")
     @ApiOperation(value = "Update account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account data supplied")})
+    @_Links(linkset = AccountLinkset.class)
     public Response updateAccount(final AccountJson json,
                                   @PathParam("accountId") final String accountId,
                                   @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -332,6 +397,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Delete account", hidden = true)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    @_Links(linkset = AccountLinkset.class)
     public Response cancelAccount(@PathParam("accountId") final String accountId,
                                   @javax.ws.rs.core.Context final HttpServletRequest request) {
         /*
@@ -353,6 +419,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account timeline", response = AccountTimelineJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
     public Response getAccountTimeline(@PathParam("accountId") final String accountIdString,
                                        @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                                        @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException, PaymentApiException, SubscriptionApiException {
@@ -390,6 +457,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account email notification", response = InvoiceEmailJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
     public Response getEmailNotificationsForAccount(@PathParam("accountId") final String accountId,
                                                     @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException {
         final Account account = accountUserApi.getAccountById(UUID.fromString(accountId), context.createContext(request));
@@ -406,6 +474,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Set account email notification")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
     public Response setEmailNotificationsForAccount(final InvoiceEmailJson json,
                                                     @PathParam("accountId") final String accountIdString,
                                                     @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -436,6 +505,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Rebalance account CBA")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+//    @_Links(bundle = AccountLinks.class)has no return block
     public Response rebalanceExistingCBAOnAccount(@PathParam("accountId") final String accountIdString,
                                                   @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                                   @HeaderParam(HDR_REASON) final String reason,
@@ -461,6 +531,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account invoices", response = InvoiceJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
+    @_Embedded(@Items(linkset = InvoiceEmbeddedLinkset.class, items = "${response.invoices}", name = "invoices"))
     public Response getInvoices(@PathParam("accountId") final String accountIdString,
                                 @QueryParam(QUERY_INVOICE_WITH_ITEMS) @DefaultValue("false") final boolean withItems,
                                 @QueryParam(QUERY_UNPAID_INVOICES_ONLY) @DefaultValue("false") final boolean unpaidInvoicesOnly,
@@ -483,7 +555,11 @@ public class AccountResource extends JaxRsResourceBase {
             result.add(new InvoiceJson(invoice, withItems, accountAuditLogs));
         }
 
-        return Response.status(Status.OK).entity(result).build();
+        // TODO: HAL really should be full account object with bundle list, but feeling lazy
+        Map<String, Object> wrapper = new HashMap<String, Object>();
+        wrapper.put("accountId", accountIdString);
+        wrapper.put("invoices", result);
+        return Response.status(Status.OK).entity(wrapper).build();
     }
 
     /*
@@ -498,6 +574,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account invoice payments", response = InvoicePaymentJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinkset.class)
+    @_Embedded({@Items(linkset = InvoiceEmbeddedLinkset.class, items = "${response.invoices}", name = "invoices")})
     public Response getInvoicePayments(@PathParam("accountId") final String accountIdStr,
                                        @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                                        @QueryParam(QUERY_WITH_PLUGIN_INFO) @DefaultValue("false") final Boolean withPluginInfo,
@@ -515,7 +593,11 @@ public class AccountResource extends JaxRsResourceBase {
             final UUID invoiceId = getInvoiceId(invoicePayments, payment);
             result.add(new InvoicePaymentJson(payment, invoiceId, accountAuditLogs));
         }
-        return Response.status(Status.OK).entity(result).build();
+        // TODO: HAL really should be full account object with bundle list, but feeling lazy
+        Map<String, Object> wrapper = new HashMap<String, Object>();
+        wrapper.put("accountId", accountId);
+        wrapper.put("invoices", result);
+        return Response.status(Status.OK).entity(wrapper).build();
     }
 
     @Timed
@@ -526,6 +608,11 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Trigger a payment for all unpaid invoices")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(links = { 
+    		@Link(rel = "accountId", href = "${this}/${response.accountId"),
+    		@Link(rel = "externalKey", href = "${this}?externalKey=${response.externalKey",
+    		    check = "${response.externalKey}")}
+    		)
     public Response payAllInvoices(@PathParam("accountId") final String accountId,
                                    @QueryParam(QUERY_PAYMENT_EXTERNAL) @DefaultValue("false") final Boolean externalPayment,
                                    @QueryParam(QUERY_PAYMENT_AMOUNT) final BigDecimal paymentAmount,

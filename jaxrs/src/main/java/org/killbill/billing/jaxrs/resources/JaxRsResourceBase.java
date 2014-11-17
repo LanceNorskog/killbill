@@ -249,7 +249,8 @@ public abstract class JaxRsResourceBase implements JaxrsResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    protected <E extends Entity, J extends JsonBase> Response buildStreamingPaginationResponse(final Pagination<E> entities,
+    protected <E extends Entity, J extends JsonBase> Response buildStreamingPaginationResponse(final String arrayName,
+    																						   final Pagination<E> entities,
                                                                                                final Function<E, J> toJson,
                                                                                                final URI nextPageUri) {
         final StreamingOutput json = new StreamingOutput() {
@@ -258,6 +259,7 @@ public abstract class JaxRsResourceBase implements JaxrsResource {
                 final JsonGenerator generator = mapper.getFactory().createJsonGenerator(output);
                 generator.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
 
+                generator.writeFieldName(arrayName);
                 generator.writeStartArray();
                 for (final E entity : entities) {
                     final J asJson = toJson.apply(entity);
@@ -266,6 +268,7 @@ public abstract class JaxRsResourceBase implements JaxrsResource {
                     }
                 }
                 generator.writeEndArray();
+                generator.writeEndObject();
                 generator.close();
             }
         };
