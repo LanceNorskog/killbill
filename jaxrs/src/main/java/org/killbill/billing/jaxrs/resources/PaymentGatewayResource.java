@@ -94,6 +94,7 @@ public class PaymentGatewayResource extends JaxRsResourceBase {
     @ApiOperation(value = "Generate form data to redirect the customer to the gateway", response = HostedPaymentPageFormDescriptorJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid accountId supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // accountId, formUrl
     public Response buildFormDescriptor(final HostedPaymentPageFieldsJson json,
                                         @PathParam(QUERY_ACCOUNT_ID) final String accountIdString,
                                         @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -133,6 +134,7 @@ public class PaymentGatewayResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Process a gateway notification", notes = "The response is built by the appropriate plugin")
     @ApiResponses(value = {})
+    // accountId
     public Response processNotification(final String body,
                                         @PathParam(QUERY_PAYMENT_PLUGIN_NAME) final String pluginName,
                                         @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,

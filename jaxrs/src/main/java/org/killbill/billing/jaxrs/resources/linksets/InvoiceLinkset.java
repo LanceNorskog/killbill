@@ -1,7 +1,10 @@
 package org.killbill.billing.jaxrs.resources.linksets;
 
+import java.util.Map;
+
 import org.killbill.billing.jaxrs.resources.JaxrsResource;
 
+import us.norskog.simplehal.Hyper;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Links;
 
@@ -14,9 +17,14 @@ import us.norskog.simplehal._Links;
  *
  */
 
-@_Links(links = { 
-		@Link(rel = "invoiceId", href = JaxrsResource.INVOICES_PATH + "/${response.invoiceId")}
-		)
-public class InvoiceLinkset {
+public class InvoiceLinkset extends Hyper {
+
+	@Override
+	@_Links(links = { 
+			@Link(rel = "invoiceId", href = JaxrsResource.INVOICES_PATH + "/${response.invoiceId")}
+			)
+	public Map<String, ? extends Object> getLink(Object base) {
+		return null;
+	}
 
 }

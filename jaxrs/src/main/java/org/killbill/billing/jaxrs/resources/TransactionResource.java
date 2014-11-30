@@ -81,6 +81,7 @@ public class TransactionResource extends JaxRsResourceBase {
     @ApiOperation(value = "Mark a pending payment transaction as succeeded or failed")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Account or Payment not found")})
+    // transactionId, transactionKey, paymentId, paymentKey
     public Response notifyStateChanged(final PaymentTransactionJson json,
                                        @PathParam("transactionId") final String transactionIdStr,
                                        @HeaderParam(HDR_CREATED_BY) final String createdBy,

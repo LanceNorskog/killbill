@@ -90,6 +90,7 @@ public class CatalogResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve the full catalog as JSON", response = StaticCatalog.class)
     @ApiResponses(value = {})
+    // accountId, catalogId
     public Response getCatalogJson(@javax.ws.rs.core.Context final HttpServletRequest request) throws Exception {
         final StaticCatalog catalog = catalogService.getCurrentCatalog();
 
@@ -116,6 +117,7 @@ public class CatalogResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve available add-ons for a given product", response = PlanDetailJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId, TODO links to plans
     public Response getAvailableAddons(@QueryParam("baseProductName") final String baseProductName,
                                        @Nullable @QueryParam("priceListName") final String priceListName,
                                        @javax.ws.rs.core.Context final HttpServletRequest request) throws CatalogApiException {
@@ -134,6 +136,7 @@ public class CatalogResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve available base plans", response = PlanDetailJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId, TODO links to plans
     public Response getAvailableBasePlans(@javax.ws.rs.core.Context final HttpServletRequest request) throws CatalogApiException {
         final StaticCatalog catalog = catalogService.getCurrentCatalog();
         final List<Listing> listings = catalog.getAvailableBasePlanListings();
@@ -150,6 +153,7 @@ public class CatalogResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a summarized version of the catalog as JSON", response = CatalogJsonSimple.class)
     @ApiResponses(value = {})
+    // links for parts of catalog
     public Response getSimpleCatalog(@javax.ws.rs.core.Context final HttpServletRequest request) throws CatalogApiException {
         final StaticCatalog catalog = catalogService.getCurrentCatalog();
 

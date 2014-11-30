@@ -18,6 +18,7 @@ package org.killbill.billing.jaxrs.resources;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
@@ -31,6 +32,7 @@ import javax.ws.rs.core.Response;
 import org.killbill.billing.ObjectType;
 import org.killbill.billing.account.api.AccountUserApi;
 import org.killbill.billing.jaxrs.json.CustomFieldJson;
+import org.killbill.billing.jaxrs.resources.linksets.AccountLinks;
 import org.killbill.billing.jaxrs.util.Context;
 import org.killbill.billing.jaxrs.util.JaxrsUriBuilder;
 import org.killbill.billing.payment.api.PaymentApi;
@@ -43,6 +45,8 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.customfield.CustomField;
 import org.killbill.billing.util.entity.Pagination;
 import org.killbill.clock.Clock;
+
+import us.norskog.simplehal._Links;
 
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Function;
@@ -78,6 +82,9 @@ public class CustomFieldResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List custom fields", response = CustomFieldJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId
+    // paging customField search
+    @_Links(linkset = Map.class)
     public Response getCustomFields(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                     @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                     @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
@@ -104,6 +111,8 @@ public class CustomFieldResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search custom fields", response = CustomFieldJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId
+    // paging customField search
     public Response searchCustomFields(@PathParam("searchKey") final String searchKey,
                                        @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                        @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,

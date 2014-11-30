@@ -83,6 +83,8 @@ public class TagResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List tags", response = TagJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // search link set
+    // embedded tagId, tagDefinitionId
     public Response getTags(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                             @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                             @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
@@ -116,6 +118,8 @@ public class TagResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search tags", response = TagJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // search link set
+    // embedded tagId, tagDefinitionId
     public Response searchTags(@PathParam("searchKey") final String searchKey,
                                @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,

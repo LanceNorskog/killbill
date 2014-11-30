@@ -75,7 +75,8 @@ import org.killbill.billing.jaxrs.json.PaymentJson;
 import org.killbill.billing.jaxrs.json.PaymentMethodJson;
 import org.killbill.billing.jaxrs.json.PaymentTransactionJson;
 import org.killbill.billing.jaxrs.json.TagJson;
-import org.killbill.billing.jaxrs.resources.linksets.AccountLinkset;
+import org.killbill.billing.jaxrs.resources.linksets.AccountLinks;
+import org.killbill.billing.jaxrs.resources.linksets.AccountPagination;
 import org.killbill.billing.jaxrs.resources.linksets.InvoiceEmbeddedLinkset;
 import org.killbill.billing.jaxrs.resources.linksets.InvoiceLinkset;
 import org.killbill.billing.jaxrs.util.Context;
@@ -164,6 +165,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve an account by id", response = AccountJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    @_Links(linkset = AccountLinks.class)
     public Response getAccount(@PathParam("accountId") final String accountId,
                                @QueryParam(QUERY_ACCOUNT_WITH_BALANCE) @DefaultValue("false") final Boolean accountWithBalance,
                                @QueryParam(QUERY_ACCOUNT_WITH_BALANCE_AND_CBA) @DefaultValue("false") final Boolean accountWithBalanceAndCBA,
@@ -182,29 +184,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List accounts", response = AccountJson.class, responseContainer = "List")
     @ApiResponses(value = {})
-    @_Links(links = { 
-       		@Link(rel = "self", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
-    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    	    		} ),
-    		@Link(rel = "first", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
-    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    				} ),
-    	    @Link(rel = "next", href = {"${this}?", 
-    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}", 
-    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "+",
-    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    	    		})
-    		})    
+    @_Links(linkset = AccountLinks.class)
     public Response getAccounts(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                 @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                 @QueryParam(QUERY_ACCOUNT_WITH_BALANCE) @DefaultValue("false") final Boolean accountWithBalance,
@@ -234,29 +214,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search accounts", response = AccountJson.class, responseContainer = "List")
     @ApiResponses(value = {})
-    @_Links(links = { 
-       		@Link(rel = "self", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
-    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    	    		} ),
-    		@Link(rel = "first", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
-    				QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    				} ),
-    	    @Link(rel = "next", href = {"${this}?", 
-    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}", 
-    	    		QUERY_SEARCH_OFFSET, "=${params.", QUERY_SEARCH_OFFSET, "+",
-    	    		QUERY_SEARCH_LIMIT, "=${params.", QUERY_SEARCH_LIMIT, "}",
-       	    		QUERY_ACCOUNT_WITH_BALANCE, "=${params.", QUERY_ACCOUNT_WITH_BALANCE, "}",
-    	    		QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "=${params.", QUERY_ACCOUNT_WITH_BALANCE_AND_CBA, "}",
-    	    		QUERY_AUDIT, "=${params.", QUERY_AUDIT, "}",
-    	    		})
-    		})    
+    @_Links(linkset = AccountPagination.class)    
     public Response searchAccounts(@PathParam("searchKey") final String searchKey,
                                    @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                    @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
@@ -289,7 +247,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve bundles for account", response = BundleJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = Map.class)
     public Response getAccountBundles(@PathParam("accountId") final String accountId,
                                       @QueryParam(QUERY_EXTERNAL_KEY) final String externalKey,
                                       @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException, SubscriptionApiException {
@@ -321,7 +279,8 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve an account by external key", response = AccountJson.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
+    @_Embedded(value = { @Items(items = "", name = "", linkset = {}) })
     public Response getAccountByKey(@QueryParam(QUERY_EXTERNAL_KEY) final String externalKey,
                                     @QueryParam(QUERY_ACCOUNT_WITH_BALANCE) @DefaultValue("false") final Boolean accountWithBalance,
                                     @QueryParam(QUERY_ACCOUNT_WITH_BALANCE_AND_CBA) @DefaultValue("false") final Boolean accountWithBalanceAndCBA,
@@ -354,7 +313,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Create account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account data supplied")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     public Response createAccount(final AccountJson json,
                                   @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                   @HeaderParam(HDR_REASON) final String reason,
@@ -375,7 +334,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Path("/{accountId:" + UUID_PATTERN + "}")
     @ApiOperation(value = "Update account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account data supplied")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     public Response updateAccount(final AccountJson json,
                                   @PathParam("accountId") final String accountId,
                                   @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -397,7 +356,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Delete account", hidden = true)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     public Response cancelAccount(@PathParam("accountId") final String accountId,
                                   @javax.ws.rs.core.Context final HttpServletRequest request) {
         /*
@@ -419,7 +378,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account timeline", response = AccountTimelineJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
+    // could add embeddeds for invoice and payment
     public Response getAccountTimeline(@PathParam("accountId") final String accountIdString,
                                        @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                                        @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException, PaymentApiException, SubscriptionApiException {
@@ -457,7 +417,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account email notification", response = InvoiceEmailJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     public Response getEmailNotificationsForAccount(@PathParam("accountId") final String accountId,
                                                     @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException {
         final Account account = accountUserApi.getAccountById(UUID.fromString(accountId), context.createContext(request));
@@ -474,7 +434,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Set account email notification")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+//    @_Links(linkset = AccountLinkset.class) needs to return account object
     public Response setEmailNotificationsForAccount(final InvoiceEmailJson json,
                                                     @PathParam("accountId") final String accountIdString,
                                                     @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -531,7 +491,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account invoices", response = InvoiceJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     @_Embedded(@Items(linkset = InvoiceEmbeddedLinkset.class, items = "${response.invoices}", name = "invoices"))
     public Response getInvoices(@PathParam("accountId") final String accountIdString,
                                 @QueryParam(QUERY_INVOICE_WITH_ITEMS) @DefaultValue("false") final boolean withItems,
@@ -574,7 +534,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account invoice payments", response = InvoicePaymentJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(linkset = AccountLinkset.class)
+    @_Links(linkset = AccountLinks.class)
     @_Embedded({@Items(linkset = InvoiceEmbeddedLinkset.class, items = "${response.invoices}", name = "invoices")})
     public Response getInvoicePayments(@PathParam("accountId") final String accountIdStr,
                                        @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
@@ -608,11 +568,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Trigger a payment for all unpaid invoices")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
-    @_Links(links = { 
-    		@Link(rel = "accountId", href = "${this}/${response.accountId"),
-    		@Link(rel = "externalKey", href = "${this}?externalKey=${response.externalKey",
-    		    check = "${response.externalKey}")}
-    		)
+    // no return block. should return embedded with all invoice ids
     public Response payAllInvoices(@PathParam("accountId") final String accountId,
                                    @QueryParam(QUERY_PAYMENT_EXTERNAL) @DefaultValue("false") final Boolean externalPayment,
                                    @QueryParam(QUERY_PAYMENT_AMOUNT) final BigDecimal paymentAmount,
@@ -706,6 +662,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account payment methods", response = PaymentMethodJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // add account links
+    // add embeded for payment methods
     public Response getPaymentMethods(@PathParam("accountId") final String accountId,
                                       @QueryParam(QUERY_WITH_PLUGIN_INFO) @DefaultValue("false") final Boolean withPluginInfo,
                                       @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -794,6 +752,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Trigger a payment (authorization, purchase or credit)")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // add account links, accountId & externalKey to response
+    // add link for payment i
     public Response processPayment(final PaymentTransactionJson json,
                                    @PathParam("accountId") final String accountIdStr,
                                    @QueryParam("paymentMethodId") final String paymentMethodIdStr,
@@ -849,6 +809,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve overdue state for account", response = OverdueStateJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // add accountid&externalKey to response
     public Response getOverdueAccount(@PathParam("accountId") final String accountId,
                                       @javax.ws.rs.core.Context final HttpServletRequest request) throws AccountApiException, OverdueException, OverdueApiException {
         final TenantContext tenantContext = context.createContext(request);
@@ -869,6 +830,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve account custom fields", response = CustomFieldJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // add accountid links
     public Response getCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                     @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                                     @javax.ws.rs.core.Context final HttpServletRequest request) {
@@ -882,6 +844,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Add custom fields to account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // add account links
     public Response createCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                        final List<CustomFieldJson> customFields,
                                        @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -900,6 +863,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Remove custom fields from account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // add accountid links
     public Response deleteCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                        @QueryParam(QUERY_CUSTOM_FIELDS) final String customFieldList,
                                        @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -921,6 +885,7 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve account tags", response = TagJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // add account links
     public Response getTags(@PathParam(ID_PARAM_NAME) final String accountIdString,
                             @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                             @QueryParam(QUERY_TAGS_INCLUDED_DELETED) @DefaultValue("false") final Boolean includedDeleted,
@@ -935,6 +900,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Add tags to account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // add account links
     public Response createTags(@PathParam(ID_PARAM_NAME) final String id,
                                @QueryParam(QUERY_TAGS) final String tagList,
                                @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -953,6 +919,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Remove tags from account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied or account does not have a default payment method (AUTO_PAY_OFF tag only)")})
+    // account links
     public Response deleteTags(@PathParam(ID_PARAM_NAME) final String id,
                                @QueryParam(QUERY_TAGS) final String tagList,
                                @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -992,6 +959,8 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve an account emails", response = AccountEmailJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // account links.
+    // want embeddeds because delete email call
     public Response getEmails(@PathParam(ID_PARAM_NAME) final String id,
                               @javax.ws.rs.core.Context final HttpServletRequest request) {
         final UUID accountId = UUID.fromString(id);
@@ -1012,6 +981,8 @@ public class AccountResource extends JaxRsResourceBase {
     @ApiOperation(value = "Add account email")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // account links
+    // email link
     public Response addEmail(final AccountEmailJson json,
                              @PathParam(ID_PARAM_NAME) final String id,
                              @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -1052,6 +1023,7 @@ public class AccountResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Delete email from account")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied")})
+    // accounts links
     public Response removeEmail(@PathParam(ID_PARAM_NAME) final String id,
                                 @PathParam("email") final String email,
                                 @HeaderParam(HDR_CREATED_BY) final String createdBy,

@@ -95,6 +95,7 @@ public class PaymentResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve a payment by id", response = PaymentJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Payment not found")})
+    // payment link links: accountId, paymentId called "paymentId" and "self" both
     public Response getPayment(@PathParam("paymentId") final String paymentIdStr,
                                @QueryParam(QUERY_WITH_PLUGIN_INFO) @DefaultValue("false") final Boolean withPluginInfo,
                                @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -116,6 +117,9 @@ public class PaymentResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Get payments", response = PaymentJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId, externalKey, 
+    // first/next/prev links
+    // embedded
     public Response getPayments(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                 @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                 @QueryParam(QUERY_PAYMENT_PLUGIN_NAME) final String pluginName,
@@ -159,6 +163,9 @@ public class PaymentResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search payments", response = PaymentJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId, paymentId links
+    // first, next, pref
+    // embedded
     public Response searchPayments(@PathParam("searchKey") final String searchKey,
                                    @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                    @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
@@ -207,6 +214,7 @@ public class PaymentResource extends JaxRsResourceBase {
     @ApiOperation(value = "Capture an existing authorization")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Account or payment not found")})
+    // account, paymentId links
     public Response captureAuthorization(final PaymentTransactionJson json,
                                          @PathParam("paymentId") final String paymentIdStr,
                                          @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -239,6 +247,7 @@ public class PaymentResource extends JaxRsResourceBase {
     @ApiOperation(value = "Refund an existing payment")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Account or payment not found")})
+    // accountId, paymentId links
     public Response refundPayment(final PaymentTransactionJson json,
                                   @PathParam("paymentId") final String paymentIdStr,
                                   @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -271,6 +280,7 @@ public class PaymentResource extends JaxRsResourceBase {
     @ApiOperation(value = "Void an existing payment")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Account or payment not found")})
+    // accountId, paymentId links
     public Response voidPayment(final PaymentTransactionJson json,
                                 @PathParam("paymentId") final String paymentIdStr,
                                 @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
@@ -299,6 +309,7 @@ public class PaymentResource extends JaxRsResourceBase {
     @ApiOperation(value = "Record a chargeback")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentId supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // accountId, paymentId links
     public Response chargebackPayment(final PaymentTransactionJson json,
                                       @PathParam("paymentId") final String paymentIdStr,
                                       @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,

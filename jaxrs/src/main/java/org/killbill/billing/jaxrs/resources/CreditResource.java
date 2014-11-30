@@ -87,6 +87,7 @@ public class CreditResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve a credit by id", response = CreditJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid credit id supplied"),
                            @ApiResponse(code = 404, message = "Credit not found")})
+    // accountId, invoiceId
     public Response getCredit(@PathParam("creditId") final String creditId,
                               @javax.ws.rs.core.Context final HttpServletRequest request) throws InvoiceApiException, AccountApiException {
         final TenantContext tenantContext = context.createContext(request);
@@ -102,6 +103,7 @@ public class CreditResource extends JaxRsResourceBase {
     @ApiOperation(value = "Create a credit")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid account id supplied"),
                            @ApiResponse(code = 404, message = "Account not found")})
+    // accountId, invoiceId
     public Response createCredit(final CreditJson json,
                                  @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                  @HeaderParam(HDR_REASON) final String reason,

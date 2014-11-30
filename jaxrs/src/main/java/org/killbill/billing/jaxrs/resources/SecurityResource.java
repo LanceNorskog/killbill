@@ -80,6 +80,7 @@ public class SecurityResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List user permissions", response = String.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId.
     public Response getCurrentUserPermissions(@javax.ws.rs.core.Context final HttpServletRequest request) {
         final Set<Permission> permissions = securityApi.getCurrentUserPermissions(context.createContext(request));
         final List<String> json = ImmutableList.<String>copyOf(Iterables.<Permission, String>transform(permissions, Functions.toStringFunction()));
@@ -92,6 +93,7 @@ public class SecurityResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Get user information", response = SubjectJson.class)
     @ApiResponses(value = {})
+    // accountId.
     public Response getCurrentUserSubject(@javax.ws.rs.core.Context final HttpServletRequest request) {
         final Subject subject = SecurityUtils.getSubject();
         final SubjectJson subjectJson = new SubjectJson(subject);

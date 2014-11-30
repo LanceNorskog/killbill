@@ -94,6 +94,7 @@ public class PaymentMethodResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve a payment method by id", response = PaymentMethodJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentMethodId supplied"),
                            @ApiResponse(code = 404, message = "Account or payment method not found")})
+    // accountId, paymentId, externalKey
     public Response getPaymentMethod(@PathParam("paymentMethodId") final String paymentMethodId,
                                      @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
                                      @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
@@ -115,6 +116,7 @@ public class PaymentMethodResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a payment method by external key", response = PaymentMethodJson.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Account or payment method not found")})
+    // accountId, paymentId, externalKey
     public Response getPaymentMethodByKey(@QueryParam(QUERY_EXTERNAL_KEY) final String externalKey,
                                           @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,
                                           @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
@@ -136,6 +138,9 @@ public class PaymentMethodResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "List payment methods", response = PaymentMethodJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId
+    // search links
+    // embedded of (accountId, paymentId, externalKey)
     public Response getPaymentMethods(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                       @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                       @QueryParam(QUERY_PAYMENT_METHOD_PLUGIN_NAME) final String pluginName,
@@ -192,6 +197,9 @@ public class PaymentMethodResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Search payment methods", response = PaymentMethodJson.class, responseContainer = "List")
     @ApiResponses(value = {})
+    // accountId
+    // search links
+    // embedded of (accountId, paymentId, externalKey)
     public Response searchPaymentMethods(@PathParam("searchKey") final String searchKey,
                                          @QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                          @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
@@ -252,6 +260,8 @@ public class PaymentMethodResource extends JaxRsResourceBase {
     @ApiOperation(value = "Delete a payment method")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid paymentMethodId supplied"),
                            @ApiResponse(code = 404, message = "Account or payment method not found")})
+    // accountId
+    // accountId, paymentId, externalKey
     public Response deletePaymentMethod(@PathParam("paymentMethodId") final String paymentMethodId,
                                         @QueryParam(QUERY_DELETE_DEFAULT_PM_WITH_AUTO_PAY_OFF) @DefaultValue("false") final Boolean deleteDefaultPaymentMethodWithAutoPayOff,
                                         @QueryParam(QUERY_PLUGIN_PROPERTY) final List<String> pluginPropertiesString,

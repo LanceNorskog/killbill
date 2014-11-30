@@ -55,6 +55,9 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.clock.Clock;
 
+import us.norskog.simplehal._Links;
+import us.norskog.simplehal.Link;
+
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -96,6 +99,7 @@ public class UsageResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Record usage for a subscription")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription (e.g. inactive)")})
+    @_Links(links = {@Link(href = JaxrsResource.SUBSCRIPTIONS_PATH + "/${params.subscriptionId}", rel = "subscription")})
     public Response recordUsage(final SubscriptionUsageRecordJson json,
                                 @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                 @HeaderParam(HDR_REASON) final String reason,
@@ -125,6 +129,7 @@ public class UsageResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve usage for a subscription and unit type", response = RolledUpUsageJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Missing start date or end date")})
+    @_Links(links = {@Link(href = JaxrsResource.SUBSCRIPTIONS_PATH + "/${params.subscriptionId}", rel = "subscription")})
     public Response getUsage(@PathParam("subscriptionId") final String subscriptionId,
                              @PathParam("unitType") final String unitType,
                              @QueryParam(QUERY_START_DATE) final String startDate,
@@ -150,6 +155,7 @@ public class UsageResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve usage for a subscription", response = RolledUpUsageJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Missing start date or end date")})
+    @_Links(links = {@Link(href = JaxrsResource.SUBSCRIPTIONS_PATH + "/${params.subscriptionId}", rel = "subscription")})
     public Response getAllUsage(@PathParam("subscriptionId") final String subscriptionId,
                                 @QueryParam(QUERY_START_DATE) final String startDate,
                                 @QueryParam(QUERY_END_DATE) final String endDate,

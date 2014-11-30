@@ -123,6 +123,7 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve a subscription by id", response = SubscriptionJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied"),
                            @ApiResponse(code = 404, message = "Subscription not found")})
+    // accountId, bundleId, subscriptionId, 
     public Response getEntitlement(@PathParam("subscriptionId") final String subscriptionId,
                                    @javax.ws.rs.core.Context final HttpServletRequest request) throws SubscriptionApiException {
         final UUID uuid = UUID.fromString(subscriptionId);
@@ -137,6 +138,7 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Create an entitlement")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid entitlement supplied")})
+    // accountId, bundleId, subscriptionId, externalKey
     public Response createEntitlement(final SubscriptionJson entitlement,
                                       @QueryParam(QUERY_REQUESTED_DT) final String requestedDate,
                                       @QueryParam(QUERY_CALL_COMPLETION) @DefaultValue("false") final Boolean callCompletion,
@@ -197,6 +199,7 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @ApiOperation(value = "Un-cancel an entitlement")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied"),
                            @ApiResponse(code = 404, message = "Entitlement not found")})
+    // accountId, bundleId, subscriptionId, externalKey
     public Response uncancelEntitlementPlan(@PathParam("subscriptionId") final String subscriptionId,
                                             @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                             @HeaderParam(HDR_REASON) final String reason,
@@ -216,7 +219,8 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @ApiOperation(value = "Change entitlement plan")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied"),
                            @ApiResponse(code = 404, message = "Entitlement not found")})
-    public Response changeEntitlementPlan(final SubscriptionJson entitlement,
+    // accountId, bundleId, subscriptionId, externalKey
+   public Response changeEntitlementPlan(final SubscriptionJson entitlement,
                                           @PathParam("subscriptionId") final String subscriptionId,
                                           @QueryParam(QUERY_REQUESTED_DT) final String requestedDate,
                                           @QueryParam(QUERY_CALL_COMPLETION) @DefaultValue("false") final Boolean callCompletion,
@@ -284,7 +288,8 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @ApiOperation(value = "Cancel an entitlement plan")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied"),
                            @ApiResponse(code = 404, message = "Entitlement not found")})
-    public Response cancelEntitlementPlan(@PathParam("subscriptionId") final String subscriptionId,
+    // accountId, bundleId, subscriptionId, externalKey
+   public Response cancelEntitlementPlan(@PathParam("subscriptionId") final String subscriptionId,
                                           @QueryParam(QUERY_REQUESTED_DT) final String requestedDate,
                                           @QueryParam(QUERY_CALL_COMPLETION) @DefaultValue("false") final Boolean callCompletion,
                                           @QueryParam(QUERY_CALL_TIMEOUT) @DefaultValue("5") final long timeoutSec,
@@ -438,7 +443,9 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve subscription custom fields", response = CustomFieldJson.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied")})
-    public Response getCustomFields(@PathParam(ID_PARAM_NAME) final String id,
+    // accountId, bundleId, subscriptionId, externalKey
+    // mapify from base subscriptionJson object
+   public Response getCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                     @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,
                                     @javax.ws.rs.core.Context final HttpServletRequest request) {
         return super.getCustomFields(UUID.fromString(id), auditMode, context.createContext(request));
@@ -450,6 +457,8 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Add custom fields to subscription")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied")})
+    // accountId, bundleId, subscriptionId, externalKey
+    // mapify from base subscriptionJson object
     public Response createCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                        final List<CustomFieldJson> customFields,
                                        @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -467,7 +476,9 @@ public class SubscriptionResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Remove custom fields from subscription")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid subscription id supplied")})
-    public Response deleteCustomFields(@PathParam(ID_PARAM_NAME) final String id,
+    // accountId, bundleId, subscriptionId, externalKey
+    // mapify from base subscriptionJson object
+   public Response deleteCustomFields(@PathParam(ID_PARAM_NAME) final String id,
                                        @QueryParam(QUERY_CUSTOM_FIELDS) final String customFieldList,
                                        @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                        @HeaderParam(HDR_REASON) final String reason,

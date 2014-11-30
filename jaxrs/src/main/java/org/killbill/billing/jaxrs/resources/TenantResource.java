@@ -92,6 +92,7 @@ public class TenantResource extends JaxRsResourceBase {
     @ApiOperation(value = "Retrieve a tenant by id", response = TenantJson.class)
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid tenantId supplied"),
                            @ApiResponse(code = 404, message = "Tenant not found")})
+    // tenantId, externalKey
     public Response getTenant(@PathParam("tenantId") final String tenantId) throws TenantApiException {
         final Tenant tenant = tenantApi.getTenantById(UUID.fromString(tenantId));
         return Response.status(Status.OK).entity(new TenantJson(tenant)).build();
@@ -102,6 +103,7 @@ public class TenantResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Retrieve a tenant by its API key", response = TenantJson.class)
     @ApiResponses(value = {@ApiResponse(code = 404, message = "Tenant not found")})
+    // tenantId, externalKey
     public Response getTenantByApiKey(@QueryParam(QUERY_API_KEY) final String externalKey) throws TenantApiException {
         final Tenant tenant = tenantApi.getTenantByApiKey(externalKey);
         return Response.status(Status.OK).entity(new TenantJson(tenant)).build();
@@ -113,6 +115,7 @@ public class TenantResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Create a tenant")
     @ApiResponses(value = {@ApiResponse(code = 500, message = "Tenant already exists")})
+    // tenantId, externalKey
     public Response createTenant(final TenantJson json,
                                  @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                  @HeaderParam(HDR_REASON) final String reason,
@@ -135,6 +138,7 @@ public class TenantResource extends JaxRsResourceBase {
     @Produces(APPLICATION_JSON)
     @ApiOperation(value = "Create a push notification")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid tenantId supplied")})
+    // tenantId, externalKey
     public Response registerPushNotificationCallback(@PathParam("tenantId") final String tenantId,
                                                      @QueryParam(QUERY_NOTIFICATION_CALLBACK) final String notificationCallback,
                                                      @HeaderParam(HDR_CREATED_BY) final String createdBy,
@@ -166,6 +170,7 @@ public class TenantResource extends JaxRsResourceBase {
     @Path("/REGISTER_NOTIFICATION_CALLBACK")
     @ApiOperation(value = "Delete a push notification")
     @ApiResponses(value = {@ApiResponse(code = 400, message = "Invalid tenantId supplied")})
+    // tenantId, externalKey
     public Response deletePushNotificationCallbacks(@PathParam("tenantId") final String tenantId,
                                                     @HeaderParam(HDR_CREATED_BY) final String createdBy,
                                                     @HeaderParam(HDR_REASON) final String reason,
