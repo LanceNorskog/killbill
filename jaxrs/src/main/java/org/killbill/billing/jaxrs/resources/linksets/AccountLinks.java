@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.killbill.billing.jaxrs.resources.JaxrsResource;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Links;
 import static org.killbill.billing.jaxrs.resources.JaxRsResourceBase.*;
@@ -19,7 +19,7 @@ import static org.killbill.billing.jaxrs.resources.JaxRsResourceBase.*;
  *
  */
 
-public class AccountLinks extends Hyper {
+public class AccountLinks extends Supplier {
 
 	@_Links(links = { 
 			@Link(rel = "accountId", href = JaxrsResource.ACCOUNTS_PATH + "/${response.accountId",
@@ -28,7 +28,7 @@ public class AccountLinks extends Hyper {
 					check = "${response.externalKey}")}
 			)
 	@Override
-	public Map<String, ? extends Object> getLink(Object base) {
+	public Map<String, ? extends Object> getLink(Map<String,? extends Object> response) {
 		return null;
 	}
 

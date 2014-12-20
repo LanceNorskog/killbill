@@ -2,20 +2,20 @@ package org.killbill.billing.jaxrs.resources.linksets;
 
 import java.util.Map;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
 
 
-public class AccountEmbedded extends Hyper {
+public class AccountEmbedded implements Supplier {
 
 	@_Links(links = { 
 			})  
-	@_Embedded(value = { @Items(items = "", name = "") 
+	@_Embedded(links = { @Items(items = "", name = "") 
 	})
-	@Override
-	public Map<String, ? extends Object> getLink(Object base) {
+
+	public Map<String, ? extends Object> getLink(Map<String,? extends Object> response) {
 		// TODO Auto-generated method stub
 		return null;
 	}

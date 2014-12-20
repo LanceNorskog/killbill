@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.killbill.billing.jaxrs.resources.JaxrsResource;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Items;
 import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
@@ -12,14 +12,16 @@ import us.norskog.simplehal.Link;
 
 /**
  * InvoiceItem lists for InvoiceJson return
+ * 
  * @author lance
  *
  */
-public class InvoiceEmbeddedLinkset extends Hyper {
+public class InvoiceEmbeddedLinkset extends Supplier {
 
 	@Override
-	@_Embedded(value = { @Items(items = "", name = "") })
-	public Map<String, ? extends Object> getLink(Object base) {
+	// links start with JaxrsResource.INVOICE_INVOICES_PATH
+	@_Embedded(links = { @Items(items = "", name = "") })
+	public Map<String, ? extends Object> getLink(Map<String,? extends Object> response) {
 		return null;
 	}
 

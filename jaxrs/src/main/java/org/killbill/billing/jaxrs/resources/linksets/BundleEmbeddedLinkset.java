@@ -5,24 +5,20 @@ import java.util.Map;
 import org.killbill.billing.jaxrs.resources.JaxrsResource;
 
 import us.norskog.simplehal.Supplier;
-import us.norskog.simplehal.Link;
+import us.norskog.simplehal.Items;
+import us.norskog.simplehal._Embedded;
 import us.norskog.simplehal._Links;
+import us.norskog.simplehal.Link;
 
 /**
- * Items for embedded set of invoice
- * Each bundle has a subscriptions. don't know if these are always the same subscription?
- * 
- * 
+ * InvoiceItem lists for InvoiceJson return
  * @author lance
  *
  */
-
-public class InvoiceLinkset extends Supplier {
+public class BundleEmbeddedLinkset extends Supplier {
 
 	@Override
-	@_Links(links = { 
-			@Link(rel = "invoiceId", href = JaxrsResource.INVOICES_PATH + "/${response.invoiceId")}
-			)
+	@_Embedded(links = { @Items(items = "", name = "") })
 	public Map<String, ? extends Object> getLink(Map<String,? extends Object> response) {
 		return null;
 	}

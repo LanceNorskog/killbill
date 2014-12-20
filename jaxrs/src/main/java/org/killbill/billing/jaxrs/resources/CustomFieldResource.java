@@ -46,6 +46,7 @@ import org.killbill.billing.util.customfield.CustomField;
 import org.killbill.billing.util.entity.Pagination;
 import org.killbill.clock.Clock;
 
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal._Links;
 
 import com.codahale.metrics.annotation.Timed;
@@ -84,7 +85,7 @@ public class CustomFieldResource extends JaxRsResourceBase {
     @ApiResponses(value = {})
     // accountId
     // paging customField search
-    @_Links(linkset = Map.class)
+    @_Links(linkset = Supplier.class)
     public Response getCustomFields(@QueryParam(QUERY_SEARCH_OFFSET) @DefaultValue("0") final Long offset,
                                     @QueryParam(QUERY_SEARCH_LIMIT) @DefaultValue("100") final Long limit,
                                     @QueryParam(QUERY_AUDIT) @DefaultValue("NONE") final AuditMode auditMode,

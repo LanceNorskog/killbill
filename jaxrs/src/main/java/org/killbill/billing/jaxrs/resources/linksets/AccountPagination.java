@@ -8,12 +8,12 @@ import static org.killbill.billing.jaxrs.resources.JaxrsResource.QUERY_SEARCH_OF
 
 import java.util.Map;
 
-import us.norskog.simplehal.Hyper;
+import us.norskog.simplehal.Supplier;
 import us.norskog.simplehal.Link;
 import us.norskog.simplehal._Links;
 
 
-public class AccountPagination extends Hyper {
+public class AccountPagination extends Supplier {
 
 	@_Links(links = { 
 	   		@Link(rel = "self", href = {"${this}?", QUERY_SEARCH_OFFSET, "=0&",
@@ -39,7 +39,7 @@ public class AccountPagination extends Hyper {
 		    		})
 			})    
 	@Override
-	public Map<String, ? extends Object> getLink(Object base) {
+	public Map<String, ? extends Object> getLink(Map<String,? extends Object> response) {
 		// TODO Auto-generated method stub
 		return null;
 	}
